@@ -1,0 +1,331 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title></title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    
+    
+    <meta name="author" content="Garrett Bryan"> 
+    <link rel="alternative" href="atom.xml" title="" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+</head>
+</html>
+<body class="loading">
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;"></a>
+    <h3 class="subtitle"></h3>
+    <div class="social">
+        <div class="like-icon">
+            <a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>
+        </div>
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class="main">
+        <h1 class="title"></h1>
+        <div class="stuff">
+            <span>January 26, 2019</span>
+            
+
+        </div>
+        <div class="content markdown">
+            (function() {
+
+  var canvas = document.getElementById('canvas'),
+  ctx = canvas.getContext('2d');
+
+  window.addEventListener('resize', resizeCanvas, false);
+
+  function resizeCanvas() {
+          canvas.width = $('#canvas-frame').width();
+          canvas.height = $('#canvas-frame').height();
+          drawStuff(); 
+  }
+
+  function drawStuff() {
+
+    $('#render').click(getIntersection);
+    $('#clear').click(clear);
+    $('#print').click(print);
+
+      // do your drawing stuff here
+    var Intersection = function(c1dtemp, c2dtemp, id, intervals, units){
+      this.c1 = new Cylinder(parseFloat(c1dtemp, 10)); //c1 is the larger of the two cylinders
+      this.c2 = new Cylinder(parseFloat(c2dtemp, 10));
+      this.id = parseFloat(id, 10);
+      this.a = this.id - this.c2.r();
+      this.b = this.id + this.c2.r();
+      this.intervals = [...Array(parseInt(intervals, 10)).keys()];
+      this.height = document.getElementById('canvas').offsetHeight;
+      this.units = units;
+      
+      this.CylinderMapping = this.intervals.map((i) => {
+        return this.projectPointOnToCylinder(i);
+      });
+      this.CylinderMapping.push(this.projectPointOnToCylinder(this.intervals.length))
+    
+
+      this.PlaneMapping = this.intervals.map((i) => {
+        return this.projectPointOnToPlane(i);
+      });
+      this.PlaneMapping.push(this.projectPointOnToPlane(this.intervals.length))
+    
+      this.arclengthmax = Math.max.apply(Math, this.CylinderMapping.map(function(o) {
+        return Number.isNaN(o.x) ? -Infinity : o.x; 
+      }));
+      this.arclengthmin = Math.min.apply(Math, this.CylinderMapping.map(function(o) {
+        return Number.isNaN(o.x) ? Infinity : o.x; 
+      }, this));
+       
+      this.maxY = Math.max.apply(Math, this.CylinderMapping.map(function(pt) {
+        return Number.isNaN(pt.y) ? -Infinity : pt.y; 
+      }, this));
+      this.maxYindex = this.CylinderMapping.map(function(pt) {
+        return Number.isNaN(pt.y) ? -Infinity : pt.y; 
+      }, this).indexOf(this.maxY)
+
+      switch (this.units) {
+        case 'cm':
+        this.scale = document.getElementById('canvas').offsetWidth/ 27.94;
+        break;
+        case 'inch':
+        this.scale = document.getElementById('canvas').offsetWidth/ 11;
+        break;
+        case 'fit':
+        this.scale = Math.min(
+          document.getElementById('canvas').offsetWidth / (this.arclengthmax-this.arclengthmin),
+          document.getElementById('canvas').offsetHeight / (this.maxY*2));
+        break;
+      }
+
+    }
+    
+    Intersection.prototype.render = function (canvas) {
+      var that = this;
+    
+      ctx.beginPath();
+      ctx.strokeStyle = 'blue';
+      ctx.moveTo(this.CylinderMapping[0].x,-this.CylinderMapping[0].y);
+      this.CylinderMapping.forEach(function(point) {
+        point.translateToCanvas(that).scaleToCanvas(that);
+        ctx.lineTo(point.x,point.y);
+      });
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(this.CylinderMapping[0].x,-this.CylinderMapping[0].y);
+      this.CylinderMapping.forEach(function(point) {
+        ctx.lineTo(point.x,-point.y);
+      });
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(0, this.maxY * this.scale);
+      ctx.lineTo(this.CylinderMapping[this.CylinderMapping.length-1].x,this.maxY  * this.scale);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(0, -this.maxY * this.scale);
+      ctx.lineTo(this.CylinderMapping[this.CylinderMapping.length-1].x,-this.maxY  * this.scale);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(this.CylinderMapping[0].x, this.maxY * this.scale);
+      ctx.lineTo(this.CylinderMapping[0].x, -this.maxY * this.scale);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(this.CylinderMapping[this.CylinderMapping.length-1].x, this.maxY * this.scale);
+      ctx.lineTo(this.CylinderMapping[this.CylinderMapping.length-1].x,-this.maxY  * this.scale);
+      ctx.stroke();
+
+      //Vertical Line
+      ctx.beginPath();
+      ctx.moveTo(this.CylinderMapping[this.maxYindex].x, document.getElementById('canvas').offsetHeight);
+      ctx.lineTo(this.CylinderMapping[this.maxYindex].x, -document.getElementById('canvas').offsetHeight);
+      ctx.stroke();
+      
+      //Horizontal line
+      ctx.beginPath();
+      ctx.moveTo(this.CylinderMapping[0].x, this.CylinderMapping[0].y);
+      ctx.lineTo(document.getElementById('canvas').offsetWidth,this.CylinderMapping[this.CylinderMapping.length-1].y);
+      ctx.stroke();
+
+      console.log(this);
+    }
+    
+    Intersection.prototype.projectPointOnToCylinder = function(interval) {
+      var x = this.c1.r() * ( Math.asin((this.a + interval * (( this.c2.d ) / this.intervals.length )) / this.c1.r() ));
+      var y = Math.sqrt( Math.pow(this.c2.r(),2) - Math.pow(this.a + interval * ( this.c2.d / this.intervals.length ) - (( this.a + this.b ) / 2 ), 2)) || 0;
+      return new Point(x, y);
+    }
+    
+    Intersection.prototype.projectPointOnToPlane = function(interval) {
+      var x = interval * (this.c2.d / this.intervals.length);
+      var y = Math.sqrt(Math.pow(this.c2.r(),2) - Math.pow(this.a + interval * ( this.c2.d / this.intervals.length ) - (( this.a + this.b ) / 2 ), 2));
+      return new Point(x, y);
+    }
+    
+    var Point = function(x,y) {
+      this.x = x;
+      this.y = y;
+    }
+    
+    Point.prototype.scaleToCanvas = function (intersection) {
+      this.x = this.x * intersection.scale;
+      this.y = this.y * intersection.scale;
+      //console.log(this, intersection);
+      return this;
+    }
+    
+    Point.prototype.translateToCanvas = function (intersection) {
+      this.x = this.x - intersection.arclengthmin;
+      this.y = this.y;
+      return this;
+    }
+    
+    var Cylinder = function(diameter) {
+      this.d = diameter;
+    }
+    
+    Cylinder.prototype.r = function() {
+      return this.d/2;
+    }
+
+    function getIntersection(e) {
+      ctx.save();
+      ctx.translate(0, canvas.offsetHeight/2);
+      var c1 = $('#cylinder1').val();
+      var c2 = $('#cylinder2').val();
+      var id = $('#axis-offset').val();
+      var intervals = $('#intervals').val();
+      var units = $('#units').val();
+      var intersection = new Intersection(c1, c2, id, intervals, units);
+    
+      intersection.render(canvas);
+      ctx.restore();
+    }
+    
+    function clear(e) {
+      ctx.clearRect(0, -canvas.offsetHeight/2, canvas.offsetWidth, canvas.offsetHeight*2);
+    }
+
+    function print(e) {
+      var img = new Image(); 
+      img.src = canvas.toDataURL();
+      document.body.appendChild(img);
+    }
+
+  }
+
+  resizeCanvas();
+
+})();
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link" data-ae="false" data-ci="" data-cs="" data-r="" data-o="" data-a="" data-d="false">View Comments</div>
+
+
+    </div>
+    
+        <div class="side">
+            
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
