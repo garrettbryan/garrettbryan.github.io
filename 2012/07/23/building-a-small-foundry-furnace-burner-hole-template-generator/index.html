@@ -1,0 +1,188 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title></title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    
+    
+    <meta name="author" content="Garrett Bryan"> 
+    <link rel="alternative" href="atom.xml" title="" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+</head>
+</html>
+<body class="loading">
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;"></a>
+    <h3 class="subtitle">Building a Small Furnace: Burner Hole Template Generator</h3>
+    <div class="social">
+        <div class="like-icon">
+            <a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>
+        </div>
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class="main">
+        <h1 class="title">Building a Small Furnace: Burner Hole Template Generator</h1>
+        <div class="stuff">
+            <span>July 23, 2012</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <blockquote class="pullquote [class]"><p>This is the follow up post to building a small furnace, describing how to make the templates for cutting the burner port. </p>
+</blockquote>
+<p><img src="/blog/2012/07/23/building-a-small-foundry-furnace-burner-hole-template-generator/photo-21.jpg" width="700" height="400" title="Small furnace burner template"></p>
+
+<h4 id="Projecting-a-Circle-onto-a-Cylindrical-Surface"><a href="#Projecting-a-Circle-onto-a-Cylindrical-Surface" class="headerlink" title="Projecting a Circle onto a Cylindrical Surface"></a>Projecting a Circle onto a Cylindrical Surface</h4><p>Here is the script I used to create the template to cut the burner hole in the furnace container. The variables you need to define are the diameter of cylinder 1 and diameter of cylinder 2 and the distance from the axis of cylinder 1 to the axis of cylinder 2. The generated image will have the proper proportions. Use a Photoshop like program to scale the image to actual size. Print the template image, transfer the template onto the furnace body (I taped it), and proceed to cut it out (I used a small pneumatic saw). The extended lines help align the template to the furnace body.</p>
+<p><img src="/blog/2012/07/23/building-a-small-foundry-furnace-burner-hole-template-generator/intersecting_cylinders4.jpg" width="700" height="400" title="Micro furnace ramming the lining"></p><br><p><img src="/blog/2012/07/23/building-a-small-foundry-furnace-burner-hole-template-generator/photo-3.jpg" width="700" height="400" title="Micro furnace burner port detail"></p>
+
+
+<h4 id="Possible-improvements"><a href="#Possible-improvements" class="headerlink" title="Possible improvements:"></a>Possible improvements:</h4><ul>
+<li>Templates that fully wrap around cylinder 1</li>
+<li>Cylinders that intersect at angles other than right angles</li>
+<li>Intersections of other primitive solids</li>
+<li>Create images programatically rather than relying on the canvas</li>
+<li>Generated images should be ready to print</li>
+<li>Export SVG (or a vector type file)</li>
+<li>Export tool path gcode</li>
+</ul>
+<hr>
+<h4 id="Cylinders-Intersection-Template-Generator"><a href="#Cylinders-Intersection-Template-Generator" class="headerlink" title="Cylinders Intersection Template Generator"></a>Cylinders Intersection Template Generator</h4>
+  <link id="custom-css" rel="stylesheet" type="text/css" href="../css/intersecting-cylinders.css">
+
+  <form>
+    <label for="cylinder1">Cylinder 1 Diameter</label>
+    <input type="number" name="number" id="cylinder1" value="4"><br>
+    <label for="cylinder2">Cylinder 2 Diameter</label>
+    <input type="number" name="number" id="cylinder2" value="2"><br>
+    <label for="axis-offset">Axis Offset</label>
+    <input type="number" name="number" id="axis-offset" value="1"><br>
+    <label for="units">Units</label>
+    <select id="units">
+      <option value="cm">cm</option>
+      <option value="inch">inch</option>
+      <option value="fit">fit</option>
+    </select><br>
+    <label for="intervals">Intervals</label>
+    <input type="number" name="number" id="intervals" value="200" min="20"><br>
+    <button type="button" id="render">Render</button>
+    <button type="button" id="clear">Clear</button>
+    <button type="button" id="print">Create Image</button>
+  </form>
+  <div id="container1"> 
+    <div id="canvas-frame">
+      <canvas id="canvas"></canvas>
+    </div> 
+  </div>
+  <script src="../js/intersecting-cylinders.js" defer></script>
+
+
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link" data-ae="false" data-ci="" data-cs="" data-r="" data-o="" data-a="" data-d="false">View Comments</div>
+
+
+    </div>
+    
+        <div class="side">
+            <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#Projecting-a-Circle-onto-a-Cylindrical-Surface"><span class="toc-number">1.</span> <span class="toc-text">Projecting a Circle onto a Cylindrical Surface</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Possible-improvements"><span class="toc-number">2.</span> <span class="toc-text">Possible improvements:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Cylinders-Intersection-Template-Generator"><span class="toc-number">3.</span> <span class="toc-text">Cylinders Intersection Template Generator</span></a></li></ol>
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
