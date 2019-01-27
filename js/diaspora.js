@@ -329,12 +329,12 @@ $(function() {
                 if (num >= Pages) {
                     return
                 }
-                tag.html('加载中...').data('status', 'loading')
+                tag.html('Loading...').data('status', 'loading')
                 Diaspora.loading()
                 Diaspora.L(tag.attr('href'), function(data) {
                     var link = $(data).find('.more').attr('href');
                     if (link != undefined) {
-                        tag.attr('href', link).html('加载更多').data('status', 'loaded')
+                        tag.attr('href', link).html('Load more').data('status', 'loaded')
                         tag.data('page', parseInt(tag.data('page')) + 1)
                     } else {
                         $('#pager').remove()
@@ -345,7 +345,7 @@ $(function() {
                     Diaspora.loaded()
                     $('html,body').animate({ scrollTop: tempScrollTop + 400 }, 500);
                 }, function() {
-                    tag.html('加载更多').data('status', 'loaded')
+                    tag.html('Load more').data('status', 'loaded')
                 })
                 return false;
                 break;
