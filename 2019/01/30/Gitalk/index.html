@@ -35,7 +35,7 @@
     <div id="top" style="display: block;">
     <div class="bar" style="width: 0;"></div>
     <a class="icon-home image-icon" href="javascript:;"></a>
-    <h3 class="subtitle">3D Printed Shrinkage Test Pattern</h3>
+    <h3 class="subtitle">Gitalk</h3>
     <div class="social">
         <div class="like-icon">
             <a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>
@@ -53,16 +53,32 @@
     <div class="section">
         <div class="article">
     <div class="main">
-        <h1 class="title">3D Printed Shrinkage Test Pattern</h1>
+        <h1 class="title">Gitalk</h1>
         <div class="stuff">
-            <span>June 30, 2012</span>
+            <span>January 30, 2019</span>
             
-  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/3D-printer/">3D printer</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/metal-casting/">metal casting</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/reprap/">reprap</a></li></ul>
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/Commenting-System/">Commenting System</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/Contributing/">Contributing</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/React/">React</a></li></ul>
 
 
         </div>
         <div class="content markdown">
-            <p></p><p><img src="/2012/06/30/3d-printed-shrinkage-test-pattern/shrink_test011.jpg" width="700" height="400" title="Shrink test pattern - printing in process"></p><br>Here is my first <a href="http://www.thingiverse.com/thing:26304" target="_blank" rel="noopener">test pattern</a> created in openscad. I figured a step pattern would allow a good variety of measurement locations. I’ll be posting the results soon.<p></p>
+            <p>Gitalk is an open-source commenting system, and it’s the one I use for this site. It relies on Github’s commenting system, so I don’t need to maintain an additional server.</p>
+<h4 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h4><p>Today’s issue was “<a href="https://github.com/gitalk/gitalk/issues/224" target="_blank" rel="noopener">Incorrect comment formatting for email replies. #224</a>“.<br>Github sends email notifications to issue subscribers when new comments are added to an issue. If a user replys to the email with only a comment message, then the comment message displays perfectly fine in Gitalk. If the user replys, but leaves the email thread beneath the comment message, then Gitalk will display unformatted HTML email markup. THe native Github behavior hides the extra message, so doesn’t have this problem.</p>
+<p><img src="/2019/01/30/Gitalk/native-github-behaivor.png" width="700" height="400" title="Github native behavior"> Github native behavior</p><br><p><img src="/2019/01/30/Gitalk/unformatted-html-markup.png" width="700" height="400" title="Gitalk behavior"> Gitalk behavior</p>
+
+<h4 id="Duplicating-the-issue"><a href="#Duplicating-the-issue" class="headerlink" title="Duplicating the issue"></a>Duplicating the issue</h4><p>I tested Gitalk throughly, and was able to duplicate the problem very easily. I discovered that a comment string from an email, was html and not a plain string. Watching for DOM changes from the Github native behavior showed that an “extended” class was being added to an element causing it to reveal itself.</p>
+<h4 id="Getting-My-Bearings"><a href="#Getting-My-Bearings" class="headerlink" title="Getting My Bearings"></a>Getting My Bearings</h4><p>Initially when I start with a new development project I read the README and look at the scripts, and try them out.</p>
+<p></p><p><img src="/2019/01/30/Gitalk/scripts.png" width="700" height="400" title="Gitalk scripts"> Gitalk scripts</p><br>Once I got the development server running locally, I started poking around the code.<p></p>
+<h4 id="Multiple-Problem-Areas"><a href="#Multiple-Problem-Areas" class="headerlink" title="Multiple Problem Areas"></a>Multiple Problem Areas</h4><ol>
+<li>The first thing I discovered is that the imported css file was incomplete, it was missing all styling information for emailed comments. There are two potential locations to update the style info.<ol>
+<li>Update the imported stylesheet. This stylesheet came from another repo. Submit a pull request to the repo.</li>
+<li>Add to the local styling rules to get the necessary classes.</li>
+</ol>
+</li>
+<li>Then I found the comment component was dumping the comment body straight into the DOM at render.</li>
+</ol>
+<h4 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a>Solution</h4><p></p><p><img src="/2019/01/30/Gitalk/solution.png" width="700" height="400" title="CHange lifecycle"> Lifecycle change</p><br>I went with updating a few styling rules, and adding to the component lifecycle. Since React uses a diff to check for changes, I had to first shutoff updates. Next, I added a componentDidMount stage, where I was able to test the comment string for html and add listeners if needed. My goal was to quickly get a pull request in, so I could get a feel for the team dynamics.<p></p>
+<h4 id="Future-React-Projects"><a href="#Future-React-Projects" class="headerlink" title="Future React Projects"></a>Future React Projects</h4><p>I really enjoyed getting to know the React component lifecycle through Gitalk. The more I use React the more I grow to like it. This was my first contribution to a React project.</p>
 
         </div>
         
@@ -72,7 +88,7 @@
     </div>
     
         <div class="side">
-            
+            <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#Overview"><span class="toc-number">1.</span> <span class="toc-text">Overview</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Duplicating-the-issue"><span class="toc-number">2.</span> <span class="toc-text">Duplicating the issue</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Getting-My-Bearings"><span class="toc-number">3.</span> <span class="toc-text">Getting My Bearings</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Multiple-Problem-Areas"><span class="toc-number">4.</span> <span class="toc-text">Multiple Problem Areas</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Solution"><span class="toc-number">5.</span> <span class="toc-text">Solution</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Future-React-Projects"><span class="toc-number">6.</span> <span class="toc-text">Future React Projects</span></a></li></ol>
         </div>
     
 </div>
